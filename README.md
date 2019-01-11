@@ -1,11 +1,9 @@
-# RingZer0 Solution
+# Wargames writeups
 
-These are my solution for [ringzer0ctf](https://ringzer0ctf.com/home).
+These are writeups for all the wargames that I have tried.
 
+* [RingZer0](Ringzer0/)
+    - They have amazing set of challenges in almost all the category specially `web`
 
-| Category | No. of writeups|
-|----------|----------------|
-| [`Crypto`](Crypto/)| 6   |
-| [`Forensics`](Forensics/)| 10 |
-| [`Jail Escaping`](Jail_escaping/)| 4 |
-| [`Web`](Web/)| 8 |
+* [Wechall](WeChall/)
+    - They also have good challenges but lot of them for me were/are pretty hard.

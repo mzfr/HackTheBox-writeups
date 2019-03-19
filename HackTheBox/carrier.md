@@ -279,20 +279,25 @@ __Questions__
 
 1) Why am I using terminal for everything?
 
+```
 Because I just love using terminal.
+```
 
 2) What is lynx?
 
-It's a text based web browser. You can read more about it [here](https://lynx.browser.org/)
+`It's a text based web browser. You can read more about it` [here](https://lynx.browser.org/)
 
 3) Why are you using `http` rather than using `curl`?
 
-Because http is really cool tool. Check it out [here](https://httpie.org/)
+`Because http is really cool tool. Check it out` [here](https://httpie.org/)
 
 4) What is snmpwalk?
 
+```
 It basically retrieve a subtree of management values using SNMP GETNEXT. requests
+```
 
 5) Why there aren't any Screenshot in the writeup?
-
+```
 Because I was lazy to get some screenshots.
+```

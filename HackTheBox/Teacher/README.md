@@ -1,4 +1,4 @@
-# Teacher {align=center}
+# Teacher
 
 
 __URL__: https://www.hackthebox.eu/home/machines/profile/165
@@ -246,7 +246,5 @@ __END DATE__: 20/04/2019
 
 __END TIME__: 12:37 PM
 
-
-
-[^1]: **The script used for backing up the courses folder can be found in /usr/bin folder by the name of backup.sh**
+**The script used for backing up the courses folder can be found in /usr/bin folder by the name of backup.sh**
 

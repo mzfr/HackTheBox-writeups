@@ -1,20 +1,7 @@
-# Wargames writeups
+# HackTheBox Writeups
 
-These are writeups for all the wargames that I have tried.
+I recently started trying machines on [HackTheBox](https://www.hackthebox.eu/)
 
-* [RingZer0](Ringzer0/)
-    - They have amazing set of challenges in almost all the category specially `web`
+So these are the write up for the machines that I have succesfully rooted and also they are retired.
 
-* [Wechall](WeChall/)
-    - They also have good challenges but lot of them for me were/are pretty hard.
 
-* [OverTheWire](http://overthewire.org/wargames/)
-    - Great problems mostly related to Linux commands/terminal.
-
-* [root-me](http://root-me.org/)
-    - All category of challenges.
-    - Best is the `CTF All Day` where you have to gain root access to the machines, kind of real world scenario.
-
-* [HackTheBox](https://www.hackthebox.eu/)
-    - Best place to improve or to test your pentest knowledge.
-    - PWN machines like a boss :smile:

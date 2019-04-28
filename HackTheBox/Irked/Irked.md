@@ -84,7 +84,7 @@ cat /home/djmardov/Documents/.backup
 Super elite steg backup pw
 UPupDOWNdownLRlrBAbaSSss
 ```
-hmm...:thinking_face:
+hmm... :thinking_face:
 
 After lot of messing around, reading forum comments and what not I figured out why it was referring to Stego.
 Basically If you visit the website(http://10.10.10.117/) we are prompted with the following page:

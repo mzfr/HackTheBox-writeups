@@ -17,4 +17,4 @@ Following is the list of all the boxes that I was able to root.
 
 ***
 
-<img src="https://www.hackthebox.eu/badge/image/79568" alt="Hack The Box">
+<script src="https://www.hackthebox.eu/badge/79568"></script>

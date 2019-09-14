@@ -44,7 +44,7 @@ Let's move on to all the HTTP ports
 ## HTTP
 
 
-#### Port 80
+### Port 80
 
 Website on the port 80 was pretty simple and there wasn't anything in the source of the page.
 
@@ -72,7 +72,7 @@ I tried to use those logins on `/login.php` and `/management/` but it didn't wor
 
 ***
 
-#### Port 8000
+### Port 8000
 
 ![](images/website-8000.png)
 
@@ -92,7 +92,7 @@ But since this exploit need a way to make directory I couldn't use it.
 
 ***
 
-#### Port 3000
+### Port 3000
 
 ![](images/website-3000.png)
 

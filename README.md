@@ -15,6 +15,7 @@ Following is the list of all the boxes that I was able to root.
 * [Irked](https://mzfr.github.io/HackTheBox-writeups/Irked/)
 * [Teacher](https://mzfr.github.io/HackTheBox-writeups/Teacher/)
 * [Friendzone](https://mzfr.github.io/HackTheBox-writeups/Friendzone/)
+* [Luke](https://mzfr.github.io/HackTheBox-writeups/Luke/)
 
 ***
 

@@ -17,6 +17,8 @@ Following is the list of all the boxes that I was able to root.
 * [Friendzone](https://mzfr.github.io/HackTheBox-writeups/Friendzone/)
 * [Luke](https://mzfr.github.io/HackTheBox-writeups/Luke/)
 * [Writeup](https://mzfr.github.io/HackTheBox-writeups/writeup/)
+* [safe](https://mzfr.github.io/HackTheBox-writeups/safe/)
+* [Jarvis](https://mzfr.github.io/HackTheBox-writeups/Jarvis/)
 
 ***
 

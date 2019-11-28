@@ -2,3 +2,4 @@ theme: jekyll-theme-hacker
 
 title: HackTheBox Writeups
 description: Writeups for all the HTB boxes I have solved
+google_analytics: UA-147356794-1

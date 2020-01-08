@@ -41,7 +41,7 @@ There are two different subdomains. One takes you to `api.craft.htb` and another
 
 The `API` shows some endpoints that we can visit.
 
-![](images/API.png)
+![](images/api.png)
 
 And `gog.craft.htb` shows a `self hosted git service`
 
@@ -172,7 +172,7 @@ finally:
     connection.close()
 ```
 
-![](images/credentials.py)
+![](images/credentials.png)
 
 ```json
 [

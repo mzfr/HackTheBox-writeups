@@ -23,6 +23,9 @@ Following is the list of all the boxes that I was able to root.
 * [Wall](https://mzfr.github.io/HackTheBox-writeups/wall/)
 * [Craft](https://mzfr.github.io/HackTheBox-writeups/craft/)
 * [Postman]((https://mzfr.github.io/HackTheBox-writeups/Postman/))
+* [haystack](https://mzfr.github.io/HackTheBox-writeups/haystack/)
+* [obscurity](https://mzfr.github.io/HackTheBox-writeups/obscurity/)
+* [mango](https://mzfr.github.io/HackTheBox-writeups/mango/)
 
 ***
 
